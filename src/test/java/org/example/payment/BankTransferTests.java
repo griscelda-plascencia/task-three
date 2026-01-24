@@ -4,6 +4,8 @@ import org.example.exception.InsufficientFundsException;
 import org.example.exception.InvalidPaymentDetailsException;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 import static org.junit.Assert.fail;
 
@@ -14,10 +16,11 @@ public class BankTransferTests {
     public void validatingCorrectBankTransferPayment() throws InvalidPaymentDetailsException, InsufficientFundsException {
 
         BankTransfer bankTransfer = new BankTransfer("1234567890","Bank of Java");
-        String result = paymentProcessor.process(bankTransfer, 123456.0);
+        paymentProcessor.process(bankTransfer, 123456.0);
 
-        assertTrue(result.contains("The transaction registered"));
-        assertTrue(result.contains("Bank Transfer"));
+        List<String> result = paymentProcessor.getTransactionHistory();
+        assertTrue(result.stream().anyMatch(s -> s.contains("The transaction registered")));
+        assertTrue(result.stream().anyMatch(s -> s.contains("Bank Transfer")));
     }
 
     @Test

@@ -4,6 +4,8 @@ import org.example.exception.InsufficientFundsException;
 import org.example.exception.InvalidPaymentDetailsException;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class CreditCardPaymentTests {
@@ -13,10 +15,11 @@ public class CreditCardPaymentTests {
     public void shouldProcessValidCreditCardPayment() throws InvalidPaymentDetailsException, InsufficientFundsException {
 
         CreditCardPayment creditCardPayment = new CreditCardPayment("4111111111111111","12/25","123");
-        String result = paymentProcessor.process(creditCardPayment, 123456.0);
+        paymentProcessor.process(creditCardPayment, 123456.0);
+        List<String> result = paymentProcessor.getTransactionHistory();
 
-        assertTrue(result.contains("The transaction registered"));
-        assertTrue(result.contains("Credit Card"));
+        assertTrue(result.stream().anyMatch(s -> s.contains("The transaction registered")));
+        assertTrue(result.stream().anyMatch(s -> s.contains("Credit Card")));
 
     }
 

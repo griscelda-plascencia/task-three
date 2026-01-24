@@ -5,6 +5,7 @@ import org.example.exception.InvalidPaymentDetailsException;
 import org.junit.Test;
 
 import java.io.ObjectInputValidation;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -15,10 +16,11 @@ public class PaypalPaymentTests {
     public void shouldProcessValidPayPalPayment() throws InvalidPaymentDetailsException, InsufficientFundsException {
 
         PayPalPayment payPalPayment = new PayPalPayment("user@example.com","securePassword123");
-        String result = paymentProcessor.process(payPalPayment, 123456.0);
+        paymentProcessor.process(payPalPayment, 123456.0);
+        List<String> result = paymentProcessor.getTransactionHistory();
 
-        assertTrue(result.contains("The transaction registered"));
-        assertTrue(result.contains("PayPal"));
+        assertTrue(result.stream().anyMatch(s -> s.contains("The transaction registered")));
+        assertTrue(result.stream().anyMatch(s -> s.contains("PayPal")));
     }
 
     @Test
